@@ -1,0 +1,40 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout Git
+        uses: actions/checkout@v3
+      
+      - name: Luacheck        
+        uses: lunarmodules/luacheck@v1.1.2
+
+      - name: Setup Node.js environment      
+        uses: actions/setup-node@v4.0.2
+    
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3.0.0
+        with:
+          version: latest
+
+      - name: Install Node Packages
+        run: pnpm i
+      
+      - name: Build
+        run: pnpm build --skip-user-input
+      
+      - name: Create Release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          artifacts: "dist/*"
+          makeLatest: true
