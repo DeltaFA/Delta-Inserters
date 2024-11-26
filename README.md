@@ -1,8 +1,4 @@
-# Delta-Template
-A template for more Delta Mods
+# Delta - Configurable Inserters
+Factorio mod adding simple configuration options to inserters.
 
-# IMPORTANT YOU FUCK
-## Required Stuff
-### Node
-### Pnpm
-### Factorio (duh)
+Allows 90° dropoff, extending arm leght and choosing dropoff lane.
