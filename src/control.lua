@@ -53,7 +53,7 @@ local function create_gui(player)
 
 	return gui
 end
-function change_inserter_settings(inserter, values)
+local function change_inserter_settings(inserter, values)
 	local pickup = { x = 0, y = -1 }
 	local dropoff = { x = 0, y = 1.20 }
 
@@ -80,6 +80,8 @@ function change_inserter_settings(inserter, values)
 	end
 
 	inserter.drop_position = vector.add(inserter.position, vector.rotate_vector(dropoff, (inserter.direction / 4 * 90)))
+
+	inserter.surface.play_sound{ path = "utility/wire_connect_pole" }
 end
 
 local function get_vector_direction(vector)
@@ -97,7 +99,7 @@ local function get_vector_direction(vector)
 	end
 end
 
-function get_inserter_state(inserter)
+local function get_inserter_state(inserter)
 	local current = {}
 
 	local inserter_direction = inserter.direction / 4
@@ -153,7 +155,7 @@ local function update_all_guis(inserter)
 	end
 end
 
-function change_settings(player_index)
+local function change_settings(player_index)
 	local player = game.get_player(player_index)
 	if player.opened_gui_type == defines.gui_type.entity then
 		local entity = player.opened
@@ -189,18 +191,25 @@ script.on_event(defines.events.on_gui_switch_state_changed, function(event)
 	end
 end)
 
-function quick_change_settings(player_index, operation)
-	local player = game.get_player(player_index)
-	local inserter = player.selected
-	if inserter.type ~= "inserter" then return end
+local function notification(player, text)
+	player.create_local_flying_text{
+		text = { "inserter-config."..text },
+		create_at_cursor = true
+	}
+end
+
+local function quick_change_settings(player, inserter, operation)
 	local values = get_inserter_state(inserter)
 
 	if operation == 0 then
 		values.direction = (values.direction == "none") and "right" or (values.direction == "right") and "left" or "none"
+		notification(player, "changed-direction")
 	elseif operation == 1 then
 		values.lane = (values.lane == "right") and "left" or "right"
+		notification(player, "changed-lane")
 	else
 		values.lenght = (values.lenght == "right") and "left" or "right"
+		notification(player, "changed-lenght")
 	end
 
 	change_inserter_settings(inserter, values)
@@ -208,20 +217,24 @@ function quick_change_settings(player_index, operation)
 	update_all_guis(inserter)
 end
 
+local function keybind_detected(event, operation)
+	local player = game.get_player(event.player_index)
+	if not player then return end
+	local inserter = player.selected
+	if not inserter then return end
+	if inserter.type ~= "inserter" then return end
+
+	quick_change_settings(player, inserter, operation)
+end
+
 script.on_event("inserter-config-direction", function(event)
-	if event.selected_prototype.derived_type == "inserter" then
-		quick_change_settings(event.player_index, 0)
-	end
+	keybind_detected(event, 0)
 end)
 
 script.on_event("inserter-config-lane", function(event)
-	if event.selected_prototype.derived_type == "inserter" then
-		quick_change_settings(event.player_index, 1)
-	end
+	keybind_detected(event, 1)
 end)
 
 script.on_event("inserter-config-lenght", function(event)
-	if event.selected_prototype.derived_type == "inserter" then
-		quick_change_settings(event.player_index, 2)
-	end
+	keybind_detected(event, 2)
 end)

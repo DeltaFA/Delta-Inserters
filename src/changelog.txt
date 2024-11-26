@@ -1,4 +1,15 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 26. 11. 2024
+  Minor Features:
+    - Added a sound for changing settings
+    - Added a notification for changing settings using keybinds
+
+  Bugfixes:
+    - Fixed a crash related to using keybinds outside inserters
+    - Fixed incorrect keybind
+
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 26. 11. 2024
   Major Features:
