@@ -1,13 +1,13 @@
 {
-  "name": "your-project-name",
-  "version": "0.0.0",
-  "factorio_version": "1.1",
-  "title": "Delta Template",
-  "author": "Lisekilis",
+  "name": "delta-inserters",
+  "version": "1.0.0",
+  "factorio_version": "2.0",
+  "title": "Delta Δ - Inserter Configs",
+  "author": "AzzyBunn",
   "contact": "",
   "homepage": "",
-  "description": "",
+  "description": "Simple Factorio mod adding configuration options to inserters",
   "dependencies": [
-    "base >= 1.1.107"
+    "base >= 2.0.21"
   ]
 }
