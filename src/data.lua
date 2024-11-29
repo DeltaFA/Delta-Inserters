@@ -7,7 +7,7 @@ data:extend({
 	},
 	{
 		type = "custom-input",
-		name = "inserter-config-lenght",
+		name = "inserter-config-length",
 		key_sequence = "L",
 		action = "lua"
 	},

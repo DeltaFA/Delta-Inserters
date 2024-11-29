@@ -1,0 +1,171 @@
+local vector = require("math2d").position
+
+local inserters = {}
+
+local function get_vector_direction(vector)
+	local x = vector.x
+	local y = vector.y
+
+	if y < 0 then
+		return 0
+	elseif y > 0 then
+		return 2
+	elseif x > 0 then
+		return 1
+	elseif x < 0 then
+		return 3
+	end
+end
+
+function inserters.get_state(inserter)
+	local current = {}
+
+	--get default length
+	local dropoff = vector.ensure_xy(inserter.prototype.inserter_drop_position)
+	dropoff.y = math.abs(((math.abs(dropoff.y) > math.abs(dropoff.x)) and dropoff.y) or dropoff.x)
+	local inserter_default_length = dropoff.y or 1.2
+
+	local inserter_direction = inserter.direction / 4
+
+	local drop_vector = vector.subtract(inserter.position, inserter.drop_position)
+	local drop_vector_direction = get_vector_direction(drop_vector)
+
+	--check dropoff direction
+	if drop_vector_direction == inserter_direction then
+		current.direction = "straight"
+	elseif (drop_vector_direction - inserter_direction == 1) or (drop_vector_direction - inserter_direction == -3) then
+		current.direction = "right"
+	else
+		current.direction = "left"
+	end
+
+	local length = vector.distance(inserter.position, inserter.drop_position)
+	--check length and substract it for checking target lane
+	if length > inserter_default_length + 0.6 then
+		current.length = "long"
+		length = length - inserter_default_length - 1
+	else
+		current.length = "short"
+		length = length - inserter_default_length
+	end
+
+	if length > 0 then
+		current.lane = "far"
+	else
+		current.lane = "close"
+	end
+
+	return current
+end
+
+local function changed_settings_notification(inserter, configuring_player, text)
+	for _, player in pairs(inserter.force.players) do
+		if player == configuring_player then
+			if player.opened ~= inserter then
+				player.create_local_flying_text{
+					text = { "inserter-config."..text },
+					create_at_cursor = true
+				}
+			end 
+			player.play_sound{
+				path = "utility/wire_connect_pole",
+				position = inserter.position
+			}
+		elseif player.surface == inserter.surface then
+			player.create_local_flying_text{
+				text = { "inserter-config."..text },
+				position = inserter.position
+			}
+			player.play_sound{
+				path = "utility/wire_connect_pole",
+				position = inserter.position
+			}
+		end
+	end
+end
+
+local function blacklist_notification(inserter, player, text)
+	player.create_local_flying_text{
+		text = { "inserter-config."..text },
+		create_at_cursor = true
+	}
+	player.play_sound{
+		path = "utility/cannot_build",
+		position = inserter.position
+	}
+end
+
+function inserters.set_state(inserter, values, player)
+	--default vectors
+	local pickup = vector.ensure_xy(inserter.prototype.inserter_pickup_position)
+	local dropoff = vector.ensure_xy(inserter.prototype.inserter_drop_position)
+
+	--normalize pickup/dropoff vectors 
+	pickup.y = ((math.abs(pickup.y) > math.abs(pickup.x)) and pickup.y) or pickup.x
+	dropoff.y = math.abs(((math.abs(dropoff.y) > math.abs(dropoff.x)) and dropoff.y) or dropoff.x)
+	pickup.x = 0 
+	dropoff.x = 0
+
+	if pickup.y > 1.8 then
+		
+	end
+	local current_state = inserters.get_state(inserter)
+	local changed = {}
+
+	
+	--fill all values
+	values.lane = values.lane or current_state.lane
+	values.length = values.length or current_state.length
+	values.direction = values.direction or current_state.direction
+
+	--check what's changed
+	changed.length = (values.length ~= current_state.length)
+	changed.lane = (values.lane ~= current_state.lane)
+	changed.direction = (values.direction ~= current_state.direction)
+
+	--check if changing's allowed for the inserter
+	if changed.length then
+		if storage.inserter_config_blacklist_length[inserter.name] then
+			blacklist_notification(inserter, player, "blacklist-length")
+			values.length = current_state.length
+			changed.length = false
+		end
+	end
+	if changed.direction then
+		if storage.inserter_config_blacklist_direction[inserter.name] then
+			blacklist_notification(inserter, player, "blacklist-direction")
+			values.direction = current_state.direction
+			changed.direction = false
+		end
+	end
+
+	--checking if a value is changed and applying it 
+	if changed.length then
+		changed_settings_notification(inserter, player, "changed-length")
+	end
+	if values.length == "long" then
+		pickup = vector.add(pickup, { x = 0, y = -1 })
+		dropoff = vector.add(dropoff, { x = 0, y = 1 })
+	end
+
+	if changed.lane then
+		changed_settings_notification(inserter, player, "changed-lane")
+	end
+	if values.lane == "close" then
+		dropoff = vector.add(dropoff, { x = 0, y = -0.30 })
+	end
+
+	if changed.direction then
+		changed_settings_notification(inserter, player, "changed-direction")
+	end
+	if values.direction ~= "straight" then
+		rotation = (values.direction == "right" and 90) or -90
+		dropoff = vector.rotate_vector(dropoff, rotation)
+	end
+
+	--rotate vectors to match inserter's direction before applying them
+	inserter.pickup_position = vector.add(inserter.position, vector.rotate_vector(pickup, (inserter.direction / 4 * 90)))
+	inserter.drop_position = vector.add(inserter.position, vector.rotate_vector(dropoff, (inserter.direction / 4 * 90)))
+end
+
+return inserters
