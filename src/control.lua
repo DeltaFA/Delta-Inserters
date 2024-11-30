@@ -34,9 +34,21 @@ local function check_blacklists()
 			"long-double-slim-inserter",
 			"fast-double-slim-inserter",
 			"stack-double-slim-inserter",
+			"basic-loader-slim-inserter",
+			"fast-loader-slim-inserter",
+			"fast2-loader-slim-inserter",
+		}
+		local slim_loaders = {
+			"basic-loader-slim-inserter",
+			"fast-loader-slim-inserter",
+			"fast2-loader-slim-inserter",
 		}
 		for _, inserter in pairs(slim_inserters)  do
 			storage.inserter_config_blacklist_direction[inserter] = true
+		end
+		for _, inserter in pairs(slim_loaders)  do
+			storage.inserter_config_blacklist_direction[inserter] = true
+			storage.inserter_config_blacklist_lenght[inserter] = true
 		end
 	end
 end

@@ -68,7 +68,7 @@ function inserters.get_state(inserter)
 		length = length - inserter_reach
 	end
 
-	if length > ((slim and 0.55) or 0) then
+	if length > ((slim and 0.45) or 0) then
 		current.lane = "far"
 	else
 		current.lane = "close"
@@ -85,7 +85,7 @@ local function changed_settings_notification(inserter, configuring_player, text)
 					text = { "inserter-config."..text },
 					create_at_cursor = true
 				}
-			end 
+			end
 			player.play_sound{
 				path = "utility/wire_connect_pole",
 				position = inserter.position
@@ -131,15 +131,8 @@ function inserters.set_state(inserter, values, player)
 
 	--handle long inserters
 	if dropoff.y > 1.8 then
-		log(dropoff.y)
 		dropoff = vector.subtract(dropoff, { x = 0, y = 1 })
 		pickup = vector.subtract(pickup, { x = 0, y = -1 })
-		log(dropoff.y)
-	end
-
-	--handle special... case.
-	if dropoff.y < 0.7 or (dropoff.y > 1.3 and dropoff.y < 1.4) then
-		dropoff = vector.add(dropoff, { x = 0, y = 0.30 })
 	end
 
 	--fill all values
