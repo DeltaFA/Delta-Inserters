@@ -30,7 +30,7 @@ for _, player in pairs(game.players) do
 	end
 end
 
-if mods["Kux-SlimInserters"] then
+if script.active_mods["Kux-SlimInserters"] then
 	local slim_inserters = {
 		"basic-slim-inserter",
 		"long-slim-inserter",
