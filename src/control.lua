@@ -34,6 +34,10 @@ local function check_blacklists()
 			"long-double-slim-inserter",
 			"fast-double-slim-inserter",
 			"stack-double-slim-inserter",
+			"basic-double-slim-inserter_part",
+			"long-double-slim-inserter_part",
+			"fast-double-slim-inserter_part",
+			"stack-double-slim-inserter_part",
 			"basic-loader-slim-inserter",
 			"fast-loader-slim-inserter",
 			"fast2-loader-slim-inserter",
@@ -48,7 +52,7 @@ local function check_blacklists()
 		end
 		for _, inserter in pairs(slim_loaders)  do
 			storage.inserter_config_blacklist_direction[inserter] = true
-			storage.inserter_config_blacklist_lenght[inserter] = true
+			storage.inserter_config_blacklist_length[inserter] = true
 		end
 	end
 end
@@ -60,6 +64,10 @@ script.on_init(function ()
 end)
 
 script.on_event("on_runtime_mod_setting_changed", function()
+	check_blacklists()
+end)
+
+script.on_configuration_changed(function()
 	check_blacklists()
 end)
 

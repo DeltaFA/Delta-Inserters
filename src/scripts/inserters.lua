@@ -6,15 +6,17 @@ local function get_vector_direction(vector)
 	local x = vector.x
 	local y = vector.y
 
-	if y < 0 then
+	log(vector)
+	if y < -0.2 then
 		return 0
-	elseif y > 0 then
+	elseif y > 0.2 then
 		return 2
-	elseif x > 0 then
+	elseif x > 0.2 then
 		return 1
-	elseif x < 0 then
+	elseif x < -0.2 then
 		return 3
 	end
+	return 0
 end
 
 function inserters.get_state(inserter)
