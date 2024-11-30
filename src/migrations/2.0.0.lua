@@ -29,3 +29,19 @@ for _, player in pairs(game.players) do
 		player.gui.relative.inserter_config.destroy()
 	end
 end
+
+if mods["Kux-SlimInserters"] then
+	local slim_inserters = {
+		"basic-slim-inserter",
+		"long-slim-inserter",
+		"fast-slim-inserter",
+		"stack-slim-inserter",
+		"basic-double-slim-inserter",
+		"long-double-slim-inserter",
+		"fast-double-slim-inserter",
+		"stack-double-slim-inserter",
+	}
+	for _, inserter in pairs(slim_inserters)  do
+		storage.inserter_config_blacklist_direction[inserter] = true
+	end
+end

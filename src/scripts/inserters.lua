@@ -25,8 +25,10 @@ function inserters.get_state(inserter)
 	dropoff.y = math.abs(((math.abs(dropoff.y) > math.abs(dropoff.x)) and dropoff.y) or dropoff.x)
 	local inserter_default_length = dropoff.y or 1.2
 
+	--get direction
 	local inserter_direction = inserter.direction / 4
 
+	--get dropoff vector and its direction
 	local drop_vector = vector.subtract(inserter.position, inserter.drop_position)
 	local drop_vector_direction = get_vector_direction(drop_vector)
 
@@ -40,16 +42,33 @@ function inserters.get_state(inserter)
 	end
 
 	local length = vector.distance(inserter.position, inserter.drop_position)
-	--check length and substract it for checking target lane
-	if length > inserter_default_length + 0.6 then
-		current.length = "long"
-		length = length - inserter_default_length - 1
-	else
-		current.length = "short"
-		length = length - inserter_default_length
+
+	--round to 2 points
+	length = (math.floor(length * 100 + 0.5) / 100)
+
+	
+	--handle long inserters
+	if inserter_default_length > 2 then
+		inserter_default_length = inserter_default_length - 1
 	end
 
-	if length > 0 then
+	--handle special... case.
+	local slim = false
+	if inserter_default_length < 0.7 or (inserter_default_length > 1.3 and inserter_default_length < 1.4) then
+		slim = true
+	end
+
+	--check length and substract it for checking target lane
+	inserter_reach = math.floor(inserter_default_length)
+	if length > inserter_default_length + 0.6 then
+		current.length = "long"
+		length = length - inserter_reach - 1
+	else
+		current.length = "short"
+		length = length - inserter_reach
+	end
+
+	if length > ((slim and 0.55) or 0) then
 		current.lane = "far"
 	else
 		current.lane = "close"
@@ -106,13 +125,23 @@ function inserters.set_state(inserter, values, player)
 	pickup.x = 0 
 	dropoff.x = 0
 
-	if pickup.y > 1.8 then
-		
-	end
+	--check current state
 	local current_state = inserters.get_state(inserter)
 	local changed = {}
 
-	
+	--handle long inserters
+	if dropoff.y > 1.8 then
+		log(dropoff.y)
+		dropoff = vector.subtract(dropoff, { x = 0, y = 1 })
+		pickup = vector.subtract(pickup, { x = 0, y = -1 })
+		log(dropoff.y)
+	end
+
+	--handle special... case.
+	if dropoff.y < 0.7 or (dropoff.y > 1.3 and dropoff.y < 1.4) then
+		dropoff = vector.add(dropoff, { x = 0, y = 0.30 })
+	end
+
 	--fill all values
 	values.lane = values.lane or current_state.lane
 	values.length = values.length or current_state.length
@@ -149,7 +178,7 @@ function inserters.set_state(inserter, values, player)
 	end
 
 	if changed.lane then
-		changed_settings_notification(inserter, player, "changed-lane")
+	changed_settings_notification(inserter, player, "changed-lane")
 	end
 	if values.lane == "close" then
 		dropoff = vector.add(dropoff, { x = 0, y = -0.30 })
@@ -163,7 +192,7 @@ function inserters.set_state(inserter, values, player)
 		dropoff = vector.rotate_vector(dropoff, rotation)
 	end
 
-	--rotate vectors to match inserter's direction before applying them
+	--rotate vecors to match inserter's direction before applying them
 	inserter.pickup_position = vector.add(inserter.position, vector.rotate_vector(pickup, (inserter.direction / 4 * 90)))
 	inserter.drop_position = vector.add(inserter.position, vector.rotate_vector(dropoff, (inserter.direction / 4 * 90)))
 end

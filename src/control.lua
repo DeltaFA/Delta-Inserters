@@ -7,6 +7,10 @@ local function get_setting(name)
 end
 
 local function check_blacklists()
+	--clear previous blacklist
+	storage.inserter_config_blacklist_length = {}
+	storage.inserter_config_blacklist_direction = {}
+
 	local length_blacklist = get_setting("inserter-config-length-blacklist") 
 	local direction_blacklist = get_setting("inserter-config-direction-blacklist")
 	if length_blacklist then 
@@ -16,6 +20,22 @@ local function check_blacklists()
 	end
 	if direction_blacklist then 
 		for inserter in string.gmatch(direction_blacklist, '[^",%s]+') do
+			storage.inserter_config_blacklist_direction[inserter] = true
+		end
+	end
+
+	if script.active_mods["Kux-SlimInserters"] then
+		local slim_inserters = {
+			"basic-slim-inserter",
+			"long-slim-inserter",
+			"fast-slim-inserter",
+			"stack-slim-inserter",
+			"basic-double-slim-inserter",
+			"long-double-slim-inserter",
+			"fast-double-slim-inserter",
+			"stack-double-slim-inserter",
+		}
+		for _, inserter in pairs(slim_inserters)  do
 			storage.inserter_config_blacklist_direction[inserter] = true
 		end
 	end
