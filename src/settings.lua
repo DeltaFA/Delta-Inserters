@@ -12,7 +12,7 @@ data:extend({
 		order = "b-a",
 		setting_type = "runtime-global",
 		default_value = "burner-inserter",
-    	allow_blank = true,
+		allow_blank = true,
 	},
 	{
 		type = "string-setting",
@@ -20,6 +20,6 @@ data:extend({
 		order = "b-b",
 		setting_type = "runtime-global",
 		default_value = "burner-inserter",
-    	allow_blank = true,
+		allow_blank = true,
 	}
 })
