@@ -48,7 +48,7 @@ function inserters.get_state(inserter)
 	--round to 2 points
 	length = (math.floor(length * 100 + 0.5) / 100)
 
-	
+
 	--handle long inserters
 	if inserter_default_length > 2 then
 		inserter_default_length = inserter_default_length - 1
