@@ -1,6 +1,6 @@
 {
   "name": "delta-inserters",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "scripts": {
     "build": "tsx build.ts",
     "build-factorio": "tsx build.ts --to-factorio",
