@@ -1,14 +1,18 @@
 ---------------------------------------------------------------------------------------------------
-Version: 2.0.3
-Date: 01. 12. 2024
+Version: 2.0.4
+Date: 14. 12. 2024
   Major Features:
     - Added support to Delta
     - Added Per player Setting to disable configuration GUI.
     - Added a keybind for reversed direction change. 
-  Changes:
-    - Changed inserter's arm visual lenght.
   Locale:
     - Changed some settings and keybind names.
+
+---------------------------------------------------------------------------------------------------
+Version: 2.0.3
+Date: 01. 12. 2024
+  Changes:
+    - Changed inserter's arm visual lenght.
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.0.2
