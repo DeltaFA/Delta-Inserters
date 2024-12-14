@@ -11,7 +11,7 @@ local function check_blacklists()
 	storage.inserter_config_blacklist_length = {}
 	storage.inserter_config_blacklist_direction = {}
 
-	local length_blacklist = get_setting("inserter-config-length-blacklist") 
+	local length_blacklist = get_setting("inserter-config-length-blacklist")
 	local direction_blacklist = get_setting("inserter-config-direction-blacklist")
 	if length_blacklist then 
 		for inserter in string.gmatch(length_blacklist, '[^",%s]+') do
@@ -54,6 +54,11 @@ local function check_blacklists()
 			storage.inserter_config_blacklist_direction[inserter] = true
 			storage.inserter_config_blacklist_length[inserter] = true
 		end
+	end
+
+	if script.active_mods["delta"] then
+		storage.inserter_config_blacklist_direction["burner-inserter"] = true
+		storage.inserter_config_blacklist_length["burner-inserter"] = nil
 	end
 end
 
@@ -117,6 +122,8 @@ local function quick_change_settings(player, inserter, operation)
 
 	if operation == "direction" then
 		values.direction = (values.direction == "straight") and "right" or (values.direction == "right") and "left" or "straight"
+	elseif operation == "direction-reverse" then
+		values.direction = (values.direction == "straight") and "left" or (values.direction == "left") and "right" or "straight"
 	elseif operation == "lane" then
 		values.lane = (values.lane == "far") and "close" or "far"
 	elseif operation == "length" then
@@ -139,6 +146,10 @@ end
 
 script.on_event("inserter-config-direction", function(event)
 	keybind_detected(event, "direction")
+end)
+
+script.on_event("inserter-config-direction-reverse", function(event)
+	keybind_detected(event, "direction-reverse")
 end)
 
 script.on_event("inserter-config-lane", function(event)

@@ -6,7 +6,6 @@ local function get_vector_direction(vector)
 	local x = vector.x
 	local y = vector.y
 
-	log(vector)
 	if y < -0.2 then
 		return 0
 	elseif y > 0.2 then

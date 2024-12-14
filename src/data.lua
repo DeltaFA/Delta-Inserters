@@ -7,6 +7,12 @@ data:extend({
 	},
 	{
 		type = "custom-input",
+		name = "inserter-config-direction-reverse",
+		key_sequence = "CONTROL + SHIFT + R",
+		action = "lua"
+	},
+	{
+		type = "custom-input",
 		name = "inserter-config-length",
 		key_sequence = "L",
 		action = "lua"

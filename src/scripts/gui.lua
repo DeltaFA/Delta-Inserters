@@ -3,6 +3,7 @@ local inserters = require("scripts.inserters")
 local gui_scripts = {}
 
 function gui_scripts.create_gui(player)
+	if not player.mod_settings["inserter-config-gui-enabled"].value then return end
 	local gui = player.gui.relative.add {
 		type = "frame",
 		name = "inserter_config",
@@ -65,6 +66,10 @@ local function translate_state_to_gui(current)
 end
 
 function gui_scripts.update_gui(player, inserter)
+	if not player.mod_settings["inserter-config-gui-enabled"].value then
+		if player.gui.relative.inserter_config then player.gui.relative.inserter_config.destroy() end
+	end
+
 	gui = player.gui.relative.inserter_config or gui_scripts.create_gui(player)
 	if gui and gui.valid then
 		local current = translate_state_to_gui(inserters.get_state(inserter))

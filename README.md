@@ -25,7 +25,7 @@ It allows inserters to place items on belt's closer lane.\
 ![Selecting target lane](https://raw.githubusercontent.com/DeltaFA/Delta-Inserters/refs/heads/main/showcase_assets/Lane.png)
 
 ## Turning inserter angles
-Default keybind: [Ctrl + R]\
+Default keybind: [Ctrl + R] and [Ctrl + Shift + R]\
 Allows inserters to place items on their left or right. Removing the limitation of only forward movement of items.\
 Allows for more compact builds. Spaghetti and meatballs, anyone?\
 ![Changing direction](https://raw.githubusercontent.com/DeltaFA/Delta-Inserters/refs/heads/main/showcase_assets/Direction.png)
