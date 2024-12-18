@@ -1,6 +1,6 @@
 for _, inserter in pairs(data.raw.inserter) do
 	inserter.allow_custom_vectors = true
-	if not inserter.hand_size then inserter.hand_size = 1 end -- makes short ones ugly.
+	if not inserter.hand_size then inserter.hand_size = 1.5 end -- makes short ones ugly.
 end
 
 if settings.startup["inserter-config-remove-long-inserters"].value then

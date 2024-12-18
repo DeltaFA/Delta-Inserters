@@ -94,7 +94,7 @@ local function change_settings(player_index, switch_name)
 					values.direction = (state == "none" and "straight") or (state == "right" and "right") or "left"
 				end
 
-				inserter_scripts.set_state(entity, values, player)
+				inserter_scripts.set_state(entity, values, player_index)
 				gui_scripts.update_all_guis(entity)
 			end
 		end
@@ -102,12 +102,10 @@ local function change_settings(player_index, switch_name)
 end
 
 script.on_event(defines.events.on_gui_opened, function(event)
-	local player = game.get_player(event.player_index)
-	if not player or not event.entity then return end
 	local entity = event.entity
-	if not entity.valid then return end
+	if not (entity and entity.valid) then return end
 	if entity.type == "inserter" then
-		gui_scripts.update_gui(player, entity)
+		gui_scripts.update_gui(event.player_index, entity)
 	end
 end)
 
@@ -117,7 +115,7 @@ script.on_event(defines.events.on_gui_switch_state_changed, function(event)
 	end
 end)
 
-local function quick_change_settings(player, inserter, operation)
+local function quick_change_settings(player_index, inserter, operation)
 	local values = inserter_scripts.get_state(inserter)
 
 	if operation == "direction" then
@@ -130,7 +128,7 @@ local function quick_change_settings(player, inserter, operation)
 		values.length = (values.length == "short") and "long" or "short"
 	end
 
-	inserter_scripts.set_state(inserter, values, player)
+	inserter_scripts.set_state(inserter, values, player_index)
 	gui_scripts.update_all_guis(inserter)
 end
 
@@ -141,7 +139,7 @@ local function keybind_detected(event, operation)
 	if not inserter then return end
 	if inserter.type ~= "inserter" then return end
 
-	quick_change_settings(player, inserter, operation)
+	quick_change_settings(event.player_index, inserter, operation)
 end
 
 script.on_event("inserter-config-direction", function(event)

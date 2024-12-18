@@ -1,26 +1,33 @@
 {
-  "name": "delta-inserters",
-  "version": "2.0.4",
+  "name": "simple-mod-reload",
+  "version": "1.0.1",
+  "type": "module",
   "scripts": {
     "build": "tsx build.ts",
-    "build-factorio": "tsx build.ts --to-factorio",
-    "create-link": "tsx build.ts --link --to-factorio --skip-version",
-    "dev": "tsx build.ts --folder --to-factorio --skip-version",
-    "dev-launch": "tsx build.ts --folder --to-factorio --skip-version --launch",
+    "build-factorio": "tsx build.ts -q -d factorio",
+    "create-link": "tsx build.ts -q -d factorio -b symlink",
+    "dev": "tsx build.ts -q -d factorio -b folder",
+    "dev-launch": "tsx build.ts -q -d factorio -b folder --launch",
     "release": "tsx build.ts --release"
   },
   "devDependencies": {
     "@pnpm/types": "^10.0.0",
     "@prettier/plugin-lua": "^0.0.3",
+    "@types/archiver": "^6.0.3",
     "@types/node": "^20.12.7",
-    "archiver": "^7.0.1",
-    "factoriomod-debug": "^1.1.42",
-    "tsx": "^4.7.2"
+    "@types/prompts": "^2.4.9",
+    "@types/semver": "^7.5.8",
+    "@types/yargs": "^17.0.33"
   },
   "dependencies": {
-    "better-opn": "^3.0.2",
+    "archiver": "^7.0.1",
     "chalk": "^5.3.0",
+    "cli-spinners": "^3.2.0",
+    "factoriomod-debug": "^1.1.42",
+    "ora": "^8.1.1",
     "prompts": "^2.4.2",
-    "semver": "^7.6.0"
+    "semver": "^7.6.0",
+    "tsx": "^4.19.2",
+    "yargs": "^17.7.2"
   }
 }

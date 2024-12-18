@@ -78,9 +78,9 @@ function inserters.get_state(inserter)
 	return current
 end
 
-local function changed_settings_notification(inserter, configuring_player, text)
+local function changed_settings_notification(inserter, configuring_player_index, text)
 	for _, player in pairs(inserter.force.players) do
-		if player == configuring_player then
+		if player.index == configuring_player_index then
 			if player.opened ~= inserter then
 				player.create_local_flying_text{
 					text = { "inserter-config."..text },
@@ -104,7 +104,9 @@ local function changed_settings_notification(inserter, configuring_player, text)
 	end
 end
 
-local function blacklist_notification(inserter, player, text)
+local function blacklist_notification(inserter, player_index, text)
+	local player = game.get_player(player_index)
+	if not (player and player.valid) then return end
 	player.create_local_flying_text{
 		text = { "inserter-config."..text },
 		create_at_cursor = true
@@ -115,7 +117,11 @@ local function blacklist_notification(inserter, player, text)
 	}
 end
 
-function inserters.set_state(inserter, values, player)
+function inserters.set_state(inserter, values, player_index)
+	local player = game.get_player(player_index)
+	if not (player and player.valid) then return end
+	if not (player.force == inserter.force) then return end
+
 	--default vectors
 	local pickup = vector.ensure_xy(inserter.prototype.inserter_pickup_position)
 	local dropoff = vector.ensure_xy(inserter.prototype.inserter_drop_position)
@@ -149,14 +155,14 @@ function inserters.set_state(inserter, values, player)
 	--check if changing's allowed for the inserter
 	if changed.length then
 		if storage.inserter_config_blacklist_length[inserter.name] then
-			blacklist_notification(inserter, player, "blacklist-length")
+			blacklist_notification(inserter, player_index, "blacklist-length")
 			values.length = current_state.length
 			changed.length = false
 		end
 	end
 	if changed.direction then
 		if storage.inserter_config_blacklist_direction[inserter.name] then
-			blacklist_notification(inserter, player, "blacklist-direction")
+			blacklist_notification(inserter, player_index, "blacklist-direction")
 			values.direction = current_state.direction
 			changed.direction = false
 		end
@@ -164,7 +170,7 @@ function inserters.set_state(inserter, values, player)
 
 	--checking if a value is changed and applying it 
 	if changed.length then
-		changed_settings_notification(inserter, player, "changed-length")
+		changed_settings_notification(inserter, player_index, "changed-length")
 	end
 	if values.length == "long" then
 		pickup = vector.add(pickup, { x = 0, y = -1 })
@@ -172,14 +178,14 @@ function inserters.set_state(inserter, values, player)
 	end
 
 	if changed.lane then
-	changed_settings_notification(inserter, player, "changed-lane")
+	changed_settings_notification(inserter, player_index, "changed-lane")
 	end
 	if values.lane == "close" then
 		dropoff = vector.add(dropoff, { x = 0, y = -0.30 })
 	end
 
 	if changed.direction then
-		changed_settings_notification(inserter, player, "changed-direction")
+		changed_settings_notification(inserter, player_index, "changed-direction")
 	end
 	if values.direction ~= "straight" then
 		rotation = (values.direction == "right" and 90) or -90
