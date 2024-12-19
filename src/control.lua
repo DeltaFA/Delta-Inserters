@@ -80,7 +80,7 @@ local function change_settings(player_index, switch_name)
 	local player = game.get_player(player_index)
 	if player.opened_gui_type == defines.gui_type.entity then
 		local entity = player.opened
-		if entity and entity.valid and entity.type == "inserter" then
+		if inserter_scripts.is_inserter(entity) then
 			local gui = player.gui.relative.inserter_config
 			if gui and gui.valid then
 				local values = {}
@@ -102,10 +102,8 @@ local function change_settings(player_index, switch_name)
 end
 
 script.on_event(defines.events.on_gui_opened, function(event)
-	local entity = event.entity
-	if not (entity and entity.valid) then return end
-	if entity.type == "inserter" then
-		gui_scripts.update_gui(event.player_index, entity)
+	if inserter_scripts.is_inserter(event.entity) then
+		gui_scripts.update_gui(event.player_index, event.entity)
 	end
 end)
 
@@ -136,8 +134,7 @@ local function keybind_detected(event, operation)
 	local player = game.get_player(event.player_index)
 	if not player then return end
 	local inserter = player.selected
-	if not inserter then return end
-	if inserter.type ~= "inserter" then return end
+	if not inserter_scripts.is_inserter(inserter) then return end
 
 	quick_change_settings(event.player_index, inserter, operation)
 end

@@ -18,11 +18,17 @@ local function get_vector_direction(vector)
 	return 0
 end
 
+function inserters.is_inserter(entity)
+	if not (entity and entity.valid) then return false end
+	if entity.type == "inserter" or (entity.type == "entity-ghost" and entity.ghost_type == "inserter") then return true end
+	return false
+end
+
 function inserters.get_state(inserter)
 	local current = {}
 
 	--get default length
-	local dropoff = vector.ensure_xy(inserter.prototype.inserter_drop_position)
+	local dropoff = vector.ensure_xy(((inserter.type == "entity-ghost" and inserter.ghost_prototype.inserter_drop_position) or inserter.prototype.inserter_drop_position))
 	dropoff.y = math.abs(((math.abs(dropoff.y) > math.abs(dropoff.x)) and dropoff.y) or dropoff.x)
 	local inserter_default_length = dropoff.y or 1.2
 
@@ -123,13 +129,13 @@ function inserters.set_state(inserter, values, player_index)
 	if not (player.force == inserter.force) then return end
 
 	--default vectors
-	local pickup = vector.ensure_xy(inserter.prototype.inserter_pickup_position)
-	local dropoff = vector.ensure_xy(inserter.prototype.inserter_drop_position)
+	local pickup = vector.ensure_xy(((inserter.type == "entity-ghost" and inserter.ghost_prototype.inserter_pickup_position) or inserter.prototype.inserter_pickup_position))
+	local dropoff = vector.ensure_xy(((inserter.type == "entity-ghost" and inserter.ghost_prototype.inserter_drop_position) or inserter.prototype.inserter_drop_position))
 
 	--normalize pickup/dropoff vectors 
 	pickup.y = ((math.abs(pickup.y) > math.abs(pickup.x)) and pickup.y) or pickup.x
 	dropoff.y = math.abs(((math.abs(dropoff.y) > math.abs(dropoff.x)) and dropoff.y) or dropoff.x)
-	pickup.x = 0 
+	pickup.x = 0
 	dropoff.x = 0
 
 	--check current state
@@ -154,14 +160,14 @@ function inserters.set_state(inserter, values, player_index)
 
 	--check if changing's allowed for the inserter
 	if changed.length then
-		if storage.inserter_config_blacklist_length[inserter.name] then
+		if storage.inserter_config_blacklist_length[((inserter.type == "entity-ghost" and inserter.ghost_name) or inserter.name)] then
 			blacklist_notification(inserter, player_index, "blacklist-length")
 			values.length = current_state.length
 			changed.length = false
 		end
 	end
 	if changed.direction then
-		if storage.inserter_config_blacklist_direction[inserter.name] then
+		if storage.inserter_config_blacklist_direction[((inserter.type == "entity-ghost" and inserter.ghost_name) or inserter.name)] then
 			blacklist_notification(inserter, player_index, "blacklist-direction")
 			values.direction = current_state.direction
 			changed.direction = false
@@ -192,7 +198,7 @@ function inserters.set_state(inserter, values, player_index)
 		dropoff = vector.rotate_vector(dropoff, rotation)
 	end
 
-	--rotate vecors to match inserter's direction before applying them
+	--rotate vecrs to match inserter's direction before applying them
 	inserter.pickup_position = vector.add(inserter.position, vector.rotate_vector(pickup, (inserter.direction / 4 * 90)))
 	inserter.drop_position = vector.add(inserter.position, vector.rotate_vector(dropoff, (inserter.direction / 4 * 90)))
 end
