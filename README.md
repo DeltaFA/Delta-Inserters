@@ -13,7 +13,7 @@ They also work with built in mirror functions.
 
 ![GUI Showcase](https://raw.githubusercontent.com/DeltaFA/Delta-Inserters/refs/heads/main/showcase_assets/GUI.png)
 
-The GUI can be disabled in the Per player Settings tab.
+The GUI can be disabled in the Per player Mod settings tab.
 
 ## Inserter's arm length
 Default keybind: [L]\
@@ -37,4 +37,4 @@ Allows for more compact builds. Spaghetti and meatballs, anyone?
 ![Changing direction](https://raw.githubusercontent.com/DeltaFA/Delta-Inserters/refs/heads/main/showcase_assets/Direction.png)
 
 ## Blacklist
-Inserters can be blacklisted from using either the Length or Direction configuration using Map Settings.
+Inserters can be blacklisted from using either the Length or Direction configuration in the Map tab of Mod settings.
