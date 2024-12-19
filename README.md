@@ -9,7 +9,7 @@ This mod is aimed for more balanced options by making the arm's legth constant d
 
 # What does it do?
 Inserters can be configured via their GUI or using keybinds while hovering on them.
-They also work with built in mirror functions.\
+They also work with built in mirror functions.
 
 ![GUI Showcase](https://raw.githubusercontent.com/DeltaFA/Delta-Inserters/refs/heads/main/showcase_assets/GUI.png)
 The GUI can be disabled in the Per player Settings tab.
