@@ -1,6 +1,6 @@
 {
-  "name": "simple-mod-reload",
-  "version": "1.0.1",
+  "name": "delta-inserters",
+  "version": "2.1.0",
   "type": "module",
   "scripts": {
     "build": "tsx build.ts",
