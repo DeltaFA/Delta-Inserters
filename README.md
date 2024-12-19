@@ -1,5 +1,5 @@
 # Simple Configurable Inserters
-A Factorio mod that adds simple configuration options to inserters.p
+A Factorio mod that adds simple configuration options to inserters.\
 Allows 90° dropoff, extending arm length and choosing dropoff lane.\
 A standalone part of the Delta [Δ] Overhaul.
 
