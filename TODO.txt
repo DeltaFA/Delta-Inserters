@@ -1,0 +1,6 @@
+Planned:
+-Shift copying [maybe mirroring] simulation 
+-Ghost inserter support
+
+Possibly:
+-Smart pipette vector copying
