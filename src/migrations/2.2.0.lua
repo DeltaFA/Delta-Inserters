@@ -1,0 +1,1 @@
+storage.inserter_player_pipette_config = {}

@@ -1,5 +1,6 @@
 local inserter_scripts = require("scripts.inserters")
 local gui_scripts = require("scripts.gui")
+local pipette = require("scripts.smart_pipette")
 
 local function get_setting(name)
 	if settings.global[name] == nil then return nil end
@@ -65,6 +66,7 @@ end
 script.on_init(function ()
 	storage.inserter_config_blacklist_length = {}
 	storage.inserter_config_blacklist_direction = {}
+	storage.inserter_player_pipette_config = {}
 	check_blacklists()
 end)
 
@@ -78,6 +80,7 @@ end)
 
 local function change_settings(player_index, switch_name)
 	local player = game.get_player(player_index)
+	if not (player and player.valid) then return end
 	if player.opened_gui_type == defines.gui_type.entity then
 		local entity = player.opened
 		if inserter_scripts.is_inserter(entity) then
@@ -132,7 +135,7 @@ end
 
 local function keybind_detected(event, operation)
 	local player = game.get_player(event.player_index)
-	if not player then return end
+	if not (player and player.valid) then return end
 	local inserter = player.selected
 	if not inserter_scripts.is_inserter(inserter) then return end
 
@@ -153,4 +156,25 @@ end)
 
 script.on_event("inserter-config-length", function(event)
 	keybind_detected(event, "length")
+end)
+
+script.on_event(defines.events.on_player_pipette, function(event)
+	local player = game.get_player(event.player_index)
+	if not (player and player.valid) then return end
+	if not player.selected then return end
+	if inserter_scripts.is_inserter(player.selected) then
+		pipette.save_pipette(event.player_index, player.selected)
+	end
+end)
+
+script.on_event(defines.events.on_player_cursor_stack_changed, function (event)
+	pipette.check_cursor_change(event.player_index)
+end)
+
+script.on_event(defines.events.on_built_entity, function(event)
+	local player = game.get_player(event.player_index)
+	if not (player and player.valid) then return end
+	if inserter_scripts.is_inserter(event.entity) then
+		pipette.apply_pipette(event.player_index, event.entity)
+	end
 end)

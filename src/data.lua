@@ -79,9 +79,27 @@ data:extend({
 		type = "tips-and-tricks-item",
 		name = "delta-inserter-gui",
 		category = "delta-inserter-config",
-		order = "c",
+		order = "c-a",
 		indent = 1,
 		dependencies = { "delta-inserter-config" },
 		simulation = simulations.gui
+	},
+	{
+		type = "tips-and-tricks-item",
+		name = "delta-inserter-vanilla-functions",
+		category = "delta-inserter-config",
+		order = "d-a",
+		indent = 1,
+		dependencies = { "delta-inserter-config" },
+		simulation = simulations.vanilla_functions
+	},
+	{
+		type = "tips-and-tricks-item",
+		name = "delta-inserter-smart-pipette",
+		category = "delta-inserter-config",
+		order = "e",
+		indent = 1,
+		dependencies = { "delta-inserter-config" },
+		simulation = simulations.smart_pipette
 	}
 })

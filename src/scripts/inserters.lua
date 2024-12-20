@@ -123,7 +123,8 @@ local function blacklist_notification(inserter, player_index, text)
 	}
 end
 
-function inserters.set_state(inserter, values, player_index)
+function inserters.set_state(inserter, values, player_index, silent)
+	-- silent = silent or not not game.simulation -- maybe?
 	local player = game.get_player(player_index)
 	if not (player and player.valid) then return end
 	if not (player.force == inserter.force) then return end
@@ -160,7 +161,9 @@ function inserters.set_state(inserter, values, player_index)
 
 	--check if changing's allowed for the inserter
 	if changed.length then
-		if storage.inserter_config_blacklist_length[((inserter.type == "entity-ghost" and inserter.ghost_name) or inserter.name)] then
+		if storage.inserter_config_blacklist_length[((inserter.type == "entity-ghost" and inserter.ghost_name) or inserter.name)]
+			or not settings.startup["inserter-config-allow-all-long-inserters"].value
+		then
 			blacklist_notification(inserter, player_index, "blacklist-length")
 			values.length = current_state.length
 			changed.length = false
@@ -174,8 +177,8 @@ function inserters.set_state(inserter, values, player_index)
 		end
 	end
 
-	--checking if a value is changed and applying it 
-	if changed.length then
+	--checking if a value is changed and applying it
+	if changed.length and not silent then
 		changed_settings_notification(inserter, player_index, "changed-length")
 	end
 	if values.length == "long" then
@@ -183,14 +186,14 @@ function inserters.set_state(inserter, values, player_index)
 		dropoff = vector.add(dropoff, { x = 0, y = 1 })
 	end
 
-	if changed.lane then
-	changed_settings_notification(inserter, player_index, "changed-lane")
+	if changed.lane and not silent then
+		changed_settings_notification(inserter, player_index, "changed-lane")
 	end
 	if values.lane == "close" then
 		dropoff = vector.add(dropoff, { x = 0, y = -0.30 })
 	end
 
-	if changed.direction then
+	if changed.direction and not silent then
 		changed_settings_notification(inserter, player_index, "changed-direction")
 	end
 	if values.direction ~= "straight" then

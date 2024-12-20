@@ -27,7 +27,7 @@ simulations.config = {
 		local story_table = {{
 			{
 				name = "start",
-				condition = function() return game.simulation.move_cursor({position = inserter_1.position}) end
+				condition = function() return game.simulation.move_cursor{position = inserter_1.position} end
 			},
 			{
 				condition = story_elapsed_check(0.75),
@@ -42,7 +42,7 @@ simulations.config = {
 				action = function() sim.control_press{control="inserter-config-direction", notify = false } end
 			},
 			{ condition = story_elapsed_check(1) },
-			{ condition = function() return game.simulation.move_cursor({position = inserter_2.position}) end },
+			{ condition = function() return game.simulation.move_cursor{position = inserter_2.position} end },
 			{
 				condition = story_elapsed_check(0.75),
 				action = function() sim.control_press{control="inserter-config-lane", notify = false } end
@@ -52,7 +52,7 @@ simulations.config = {
 				action = function() sim.control_press{control="inserter-config-lane", notify = false } end
 			},
 			{ condition = story_elapsed_check(1) },
-			{ condition = function() return game.simulation.move_cursor({position = inserter_3.position}) end },
+			{ condition = function() return game.simulation.move_cursor{position = inserter_3.position} end },
 			{
 				condition = story_elapsed_check(0.75),
 				action = function() sim.control_press{control="inserter-config-length", notify = false } end
@@ -99,7 +99,7 @@ simulations.direction = {
 		local story_table = {{
 			{
 				name = "start",
-				condition = function() return game.simulation.move_cursor({position = {-1.5, 0.5}}) end
+				condition = function() return game.simulation.move_cursor{position = {-1.5, 0.5}} end
 			},
 			{
 				name = "click",
@@ -168,7 +168,7 @@ simulations.lane = {
 		local story_table = {{
 			{
 				name = "start",
-				condition = function() return game.simulation.move_cursor({position = {-1.5, 0.5}}) end
+				condition = function() return game.simulation.move_cursor{position = {-1.5, 0.5}} end
 			},
 			{
 				name = "click",
@@ -220,7 +220,7 @@ simulations.length = {
 		local story_table = {{
 			{
 				name = "start",
-				condition = function() return game.simulation.move_cursor({position = {-1.5, 0.5}}) end
+				condition = function() return game.simulation.move_cursor{position = {-1.5, 0.5}} end
 			},
 			{
 				name = "click",
@@ -268,7 +268,7 @@ simulations.gui = {
 		local story_table = {{
 			{
 				name = "start",
-				condition = function() return game.simulation.move_cursor({position = inserter.position}) end
+				condition = function() return game.simulation.move_cursor{position = inserter.position} end
 			},
 			{
 				condition = story_elapsed_check(0.5),
@@ -298,5 +298,166 @@ simulations.gui = {
 	]]
 }
 
+simulations.vanilla_functions = {
+	mods = { "delta-inserters" },
+	init = [[
+		require("__core__/lualib/story")
+		require("__core__/lualib/math2d")
+		local sim = game.simulation
+		local player = game.simulation.create_test_player{name = "big k"}
+		player.teleport({0.5, 2.5})
+		player.character.direction = defines.direction.north
+		sim.camera_player = player
+		sim.camera_position = {0.5, 0}
+		sim.camera_zoom = 3
+		sim.camera_alt_info = false
+		sim.camera_player_cursor_position = player.position
+
+		game.surfaces[1].create_entities_from_blueprint_string
+		{
+			string = "0eNqV0uFqhDAMB/B3yed6aL2O6auMcVQvHgGtR1PHnPTdl+vAja1sNz/VNvn9A+0G3bjg1ZML0G5A/ewY2qcNmC7Ojrc9ZyeEFnDEPnjqC3ToL2shHegH2yNEBeTO+AptFVWmk5eOgw00uy+lOj4rQBcoEH4kpp/15JapQy+WyvQruM5MaSm+MIWUraI18Rb9jdDq7+F/iDuooFuGAf2J6U2Mqty/TFS9Rw2Wg/iMXiJyAx9MSqjrg5GMM3kZLZ0/ZtzjvW75L9bcy+pfWLlACjgJ8vmGFLyg51RgHnRzbBpjKm20KWN8BxKVzKQ=",
+			position = {0.5, -3.5}
+		}
+			
+		local inserter_1 = game.surfaces[1].find_entity("fast-inserter", {-1.5, -0.5})
+		local inserter_2 = game.surfaces[1].find_entity("fast-inserter", {0.5, -0.5})
+		local inserter_3 = game.surfaces[1].find_entity("fast-inserter", {2.5, -0.5})
+		inserter_3.destroy()
+
+		local story_table = {{
+			{
+				name = "start",
+				condition = function() return game.simulation.move_cursor{position = inserter_1.position} end
+			},
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() sim.control_press{control="inserter-config-direction", notify = false } end
+			},
+			{
+				condition = story_elapsed_check(1),
+				action = function() sim.control_press{control="copy-entity-settings", notify = true } end
+			},
+			{ condition = story_elapsed_check(0.5) },
+			{ condition = function() return game.simulation.move_cursor{position = inserter_2.position} end },
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() sim.control_press{control="paste-entity-settings", notify = true } end
+			},
+			{
+				condition = story_elapsed_check(2),
+				action = function() sim.control_press{control="flip-horizontal", notify = true } end
+			},
+			{
+				condition = story_elapsed_check(1),
+				action = function() sim.control_press{control="flip-vertical", notify = true } end
+			},
+			{ condition = story_elapsed_check(1) },
+			{ condition = function() return game.simulation.move_cursor{position = {0, -1}} end },
+			{
+				condition = story_elapsed_check(0.5),
+				action = function() sim.control_press{control="copy", notify = true } end
+			},
+			{ 
+				condition = story_elapsed_check(0.1),
+				action = function() sim.mouse_down() end	
+			},
+			{ condition = story_elapsed_check(0.1) },
+			{
+				condition = function() return game.simulation.move_cursor{position = {1, 0}} end,
+				action = function() sim.mouse_up() end
+			},
+			{ condition = story_elapsed_check(0.5) },
+			{ condition = function() return game.simulation.move_cursor{position = {2.5, -0.5}} end },
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() 
+					sim.mouse_click() 
+					sim.control_press{control="pipette", notify = false}
+					player.update_selected_entity({2.5, -0.5})
+				end
+			},
+			{ condition = function() return game.simulation.move_cursor{position = {2.5, -0.5}} end },
+			{
+				condition = story_elapsed_check(2),
+				action = function() 
+					game.surfaces[1].find_entity("entity-ghost", {2.5, -0.5}).destroy()
+					story_jump_to(storage.story, "start")
+				end
+			}
+		}}
+
+		tip_story_init(story_table)
+	]]
+}
+
+simulations.smart_pipette = {
+	mods = { "delta-inserters" },
+	init = [[
+		require("__core__/lualib/story")
+		require("__core__/lualib/math2d")
+		local sim = game.simulation
+		local player = game.simulation.create_test_player{name = "big k"}
+		player.teleport({0.5, 2.5})
+		player.character.direction = defines.direction.north
+		sim.camera_player = player
+		sim.camera_position = {0.5, 0}
+		sim.camera_zoom = 3
+		sim.camera_alt_info = false
+		sim.camera_player_cursor_position = player.position
+
+		--doesn't work for simulations so gotta check if the game is a simulation instead...
+		--settings.get_player_settings(player.index)["inserter-config-smart-pipette-enabled"] = {value = true}
+
+		game.surfaces[1].create_entities_from_blueprint_string
+		{
+			string = "0eNqV0uFqhDAMB/B3yed6aL2O6auMcVQvHgGtR1PHnPTdl+vAja1sNz/VNvn9A+0G3bjg1ZML0G5A/ewY2qcNmC7Ojrc9ZyeEFnDEPnjqC3ToL2shHegH2yNEBeTO+AptFVWmk5eOgw00uy+lOj4rQBcoEH4kpp/15JapQy+WyvQruM5MaSm+MIWUraI18Rb9jdDq7+F/iDuooFuGAf2J6U2Mqty/TFS9Rw2Wg/iMXiJyAx9MSqjrg5GMM3kZLZ0/ZtzjvW75L9bcy+pfWLlACjgJ8vmGFLyg51RgHnRzbBpjKm20KWN8BxKVzKQ=",
+			position = {0.5, -3.5}
+		}
+			
+		local inserter_1 = game.surfaces[1].find_entity("fast-inserter", {-1.5, -0.5})
+		local inserter_2 = game.surfaces[1].find_entity("fast-inserter", {0.5, -0.5})
+		local inserter_3 = game.surfaces[1].find_entity("fast-inserter", {2.5, -0.5})
+		inserter_2.destroy()
+		inserter_3.destroy()
+
+		local story_table = {{
+			{
+				name = "start",
+				condition = function() return game.simulation.move_cursor{position = inserter_1.position} end
+			},
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() sim.control_press{control="inserter-config-direction-reverse", notify = false } end
+			},
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() sim.control_press{control="inserter-config-length", notify = false } end
+			},
+			{
+				condition = story_elapsed_check(0.75),
+				action = function() sim.control_press{control="pipette", notify = true } end
+			},
+			{ condition = story_elapsed_check(0.5) },
+			{ condition = function() return game.simulation.move_cursor{position = {2.5, -0.5}} end },
+			{ 
+				condition = story_elapsed_check(0.75),
+				action = function() sim.mouse_click() end	
+			},
+			{
+				condition = story_elapsed_check(0.1),
+				action = function() sim.control_press{control="pipette", notify = false } end
+			},
+			{
+				condition = story_elapsed_check(2),
+				action = function() 
+					game.surfaces[1].find_entity("entity-ghost", {2.5, -0.5}).destroy()
+					story_jump_to(storage.story, "start")
+				end
+			}
+		}}
+
+		tip_story_init(story_table)
+	]]
+}
 
 return simulations
