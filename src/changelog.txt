@@ -1,8 +1,11 @@
 ---------------------------------------------------------------------------------------------------
 Version: 2.2.0
-Date: 19. 12. 2024
+Date: 20. 12. 2024
   Major Features:
     - Added support for ghost inserters.
+    - Added Smart Insert pipette [off by default] and Tips and tricks entry about it.
+    - Added Tips and tricks entry about Vanilla functions.
+    - Added a Startup setting to allow inserter arm's length change [on by default]. 
 
 ---------------------------------------------------------------------------------------------------
 Version: 2.1.0
