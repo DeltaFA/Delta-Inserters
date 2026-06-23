@@ -1,4 +1,10 @@
 ---------------------------------------------------------------------------------------------------
+Version: 2.2.2
+Date: 23. 06. 2026
+  Changes:
+    - Updated to Factorio 2.1 - I was going to rewrite it again but the lane switch feature being vanilla just saved me from it lol.
+
+---------------------------------------------------------------------------------------------------
 Version: 2.2.1
 Date: 03. 03. 2025
   Bugfixes:

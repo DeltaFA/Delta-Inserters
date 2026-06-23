@@ -1,13 +1,13 @@
 {
   "name": "delta-inserters",
-  "version": "2.2.1",
-  "factorio_version": "2.0",
+  "version": "3.0.0",
+  "factorio_version": "2.1",
   "title": "Simple Configurable Inserters [Δ]",
   "author": "AzzyBunn",
   "contact": "",
   "homepage": "",
   "description": "Factorio mod adding simple configuration options to inserters. Part of Delta [Δ] Mods",
   "dependencies": [
-    "base >= 2.0.21"
+    "base >= 2.1.7"
   ]
 }
